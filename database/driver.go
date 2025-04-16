@@ -95,7 +95,11 @@ func Open(url string) (Driver, error) {
 		return nil, fmt.Errorf("database driver: unknown driver %v (forgotten import?)", scheme)
 	}
 
-	return d.Open(url)
+	if driverInstance, err := d.Open(url); err != nil {
+		return nil, fmt.Errorf("failed to open driver %s: %s", scheme, err)
+	} else {
+		return driverInstance, nil
+	}
 }
 
 // Register globally registers a driver.
